@@ -65,25 +65,43 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ readingType, cards, onResta
   };
 
   const handleShare = async () => {
-    const shareText = `[Mystic Path Tarot] ${getTitle()} 결과\n\n` +
-      cards.map((card, i) => `${card.position ? `${card.position}: ` : ''}${card.name}${card.isReversed ? '(역)' : ''}`).join('\n') +
-      `\n\n상세한 타로 해석을 확인해보세요!`;
+    // Generate deep link URL
+    const baseUrl = window.location.origin + window.location.pathname;
+    const params = new URLSearchParams();
+    params.set('share', '1');
+    params.set('t', readingType);
+    params.set('c', cards.map(c => c.id).join(','));
+    params.set('r', cards.map(c => c.isReversed ? '1' : '0').join(','));
+
+    const shareUrl = `${baseUrl}?${params.toString()}`;
+
+    // Descriptive summary for SNS
+    const cardSummary = cards.map((card) => {
+      const pos = card.position ? `[${card.position}] ` : '';
+      const rev = card.isReversed ? '(역방향)' : '(정방향)';
+      return `${pos}${card.name} ${rev}`;
+    }).join('\n');
+
+    const shareText = `🔮 [Mystic Path Tarot] ${getTitle()} 결과\n\n` +
+      `${cardSummary}\n\n` +
+      `자세한 해석은 아래 링크에서 확인해보세요! 👇\n` +
+      `${shareUrl}`;
 
     if (navigator.share) {
       try {
         await navigator.share({
           title: 'Mystic Path Tarot Reading',
           text: shareText,
-          url: window.location.href,
         });
       } catch (err) {
-        console.error('Error sharing:', err);
+        if ((err as Error).name !== 'AbortError') {
+          console.error('Error sharing:', err);
+        }
       }
     } else {
-      // Fallback: Copy to clipboard
       try {
         await navigator.clipboard.writeText(shareText);
-        alert('결과가 클립보드에 복사되었습니다. SNS에 붙여넣어 공유하세요!');
+        alert('결과 내용과 링크가 클립보드에 복사되었습니다! SNS에 붙여넣어 공유하세요.');
       } catch (err) {
         console.error('Failed to copy:', err);
       }
