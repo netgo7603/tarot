@@ -25,6 +25,7 @@ export interface TarotCardData {
 
 export interface SelectedCard extends TarotCardData {
   position?: 'Past' | 'Present' | 'Future' | 'Current';
+  isReversed: boolean;
 }
 
 export interface ReadingRecord {
@@ -34,4 +35,4 @@ export interface ReadingRecord {
   cards: SelectedCard[];
 }
 
-export type Step = 'HOME' | 'SELECTION' | 'RESULT' | 'HISTORY';
+export type Step = 'HOME' | 'SHUFFLE' | 'SELECTION' | 'RESULT' | 'HISTORY';

@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { ReadingRecord, ReadingType } from '../types';
+import { getTarotImageById } from '../constants';
 
 interface HistoryScreenProps {
   onBack: () => void;
@@ -42,7 +43,7 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ onBack }) => {
           <p className="text-white/40 text-xs">그동안 당신이 걸어온 운명의 발자취입니다.</p>
         </div>
         {history.length > 0 && (
-          <button 
+          <button
             onClick={clearHistory}
             className="text-red-500/60 text-[10px] font-bold uppercase tracking-widest hover:text-red-500"
           >
@@ -61,7 +62,7 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ onBack }) => {
       ) : (
         <div className="space-y-4">
           {history.map((record) => (
-            <div 
+            <div
               key={record.id}
               className="bg-white/5 border border-white/10 rounded-2xl p-5 hover:border-mystic-gold/30 transition-all group"
             >
@@ -69,25 +70,37 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ onBack }) => {
                 <div>
                   <h3 className="text-mystic-gold font-bold text-sm mb-1">{getReadingLabel(record.type)}</h3>
                   <p className="text-white/30 text-[10px] uppercase tracking-wider">
-                    {new Date(record.timestamp).toLocaleString('ko-KR', { 
-                      year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' 
+                    {new Date(record.timestamp).toLocaleString('ko-KR', {
+                      year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
                     })}
                   </p>
                 </div>
                 <div className="flex -space-x-3">
                   {record.cards.map((card, i) => (
-                    <div key={i} className="w-8 h-12 rounded-md border border-white/20 overflow-hidden shadow-lg transform group-hover:translate-y-[-4px] transition-transform">
-                      <img src={card.image} alt={card.name} className="w-full h-full object-cover" />
+                    <div key={i} className="w-8 h-12 rounded-md border border-white/20 overflow-hidden shadow-lg transform group-hover:translate-y-[-4px] transition-transform bg-mystic-navy">
+                      <img
+                        src={card.image || getTarotImageById(card.id)}
+                        alt={card.name}
+                        className={`w-full h-full object-cover ${card.isReversed ? 'rotate-180' : ''}`}
+                        onError={(e) => {
+                          const img = e.target as HTMLImageElement;
+                          if (!img.src.includes('placeholder')) {
+                            img.src = 'https://via.placeholder.com/150x250/1a1a2e/d4af37?text=TAROT';
+                          }
+                        }}
+                      />
                     </div>
                   ))}
                 </div>
               </div>
-              
+
               <div className="space-y-2">
                 {record.cards.map((card, i) => (
                   <div key={i} className="text-[11px] text-white/60 flex gap-2 items-center">
                     <span className="text-mystic-gold font-bold min-w-[50px]">{card.position || 'Card'}</span>
-                    <span className="truncate opacity-80">{card.name}</span>
+                    <span className="truncate opacity-80">
+                      {card.name} {card.isReversed && <span className="text-red-400/80 ml-1">(역)</span>}
+                    </span>
                   </div>
                 ))}
               </div>
