@@ -66,7 +66,7 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ readingType, cards, onResta
 
   const handleShare = async () => {
     // Generate deep link URL
-    const baseUrl = window.location.origin + window.location.pathname;
+    const baseUrl = 'https://tarot.lymin80.shop';
     const params = new URLSearchParams();
     params.set('share', '1');
     params.set('t', readingType);
