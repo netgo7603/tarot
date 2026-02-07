@@ -63,7 +63,7 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ readingType, cards, onResta
     const reversedStr = card.isReversed ? '역방향(Reversed)' : '정방향(Upright)';
 
     // Construct a natural language query for better AI/Search results
-    const queryText = `타로 ${typeLabel} 리딩에서 ${contextStr}에 나온 "${card.name}" ${reversedStr} 카드의 상세한 의미와 조언 해석`;
+    const queryText = `타로 ${typeLabel} 리딩에서 ${contextStr}에 나온 ${card.name} ${reversedStr} 카드의 상세한 의미와 조언을 해석해줘`;
     const query = encodeURIComponent(queryText);
     window.open(`https://www.google.com/search?q=${query}`, '_blank');
   };
@@ -211,7 +211,7 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ readingType, cards, onResta
                       </span>
                     </div>
                     <span className="text-mystic-gold text-xs font-bold flex items-center gap-2">
-                      Google AI 검색으로 상세 해석 확인
+                      Google에서 상세 해석 검색하기
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 transform group-hover/ai:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                       </svg>
