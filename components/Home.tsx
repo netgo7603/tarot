@@ -4,42 +4,41 @@ import { ReadingType } from '../types';
 
 interface HomeProps {
   onStart: (type: ReadingType) => void;
-  onViewHistory: () => void;
 }
 
-const Home: React.FC<HomeProps> = ({ onStart, onViewHistory }) => {
+const Home: React.FC<HomeProps> = ({ onStart }) => {
   const options = [
-    { 
-      type: ReadingType.DAILY, 
-      title: "오늘의 운세", 
+    {
+      type: ReadingType.DAILY,
+      title: "오늘의 운세",
       desc: "당신의 하루를 가이드해줄 한 장의 조언",
       icon: "✨",
       color: "from-blue-500/20 to-purple-500/20"
     },
-    { 
-      type: ReadingType.PAST_PRESENT_FUTURE, 
-      title: "과거, 현재, 미래", 
+    {
+      type: ReadingType.PAST_PRESENT_FUTURE,
+      title: "과거, 현재, 미래",
       desc: "시간의 흐름에 따른 당신의 운명 분석",
       icon: "⏳",
       color: "from-purple-500/20 to-pink-500/20"
     },
-    { 
-      type: ReadingType.LOVE, 
-      title: "애정운", 
+    {
+      type: ReadingType.LOVE,
+      title: "애정운",
       desc: "감정과 인연의 흐름에 대한 깊은 통찰",
       icon: "❤️",
       color: "from-red-500/20 to-pink-500/20"
     },
-    { 
-      type: ReadingType.WEALTH, 
-      title: "재물운", 
+    {
+      type: ReadingType.WEALTH,
+      title: "재물운",
       desc: "금전적 풍요와 사업적 기회의 포착",
       icon: "💰",
       color: "from-yellow-500/20 to-orange-500/20"
     },
-    { 
-      type: ReadingType.OVERALL, 
-      title: "전체운", 
+    {
+      type: ReadingType.OVERALL,
+      title: "전체운",
       desc: "삶의 전반적인 에너지와 방향성 체크",
       icon: "🔮",
       color: "from-indigo-500/20 to-cyan-500/20"
@@ -72,23 +71,13 @@ const Home: React.FC<HomeProps> = ({ onStart, onViewHistory }) => {
               </div>
             </div>
             <div className="absolute right-4 top-1/2 -translate-y-1/2 opacity-20 group-hover:opacity-100 transition-opacity">
-               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-mystic-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-               </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-mystic-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
             </div>
           </button>
         ))}
       </div>
-
-      <button 
-        onClick={onViewHistory}
-        className="w-full max-w-md py-4 rounded-2xl border border-white/10 text-white/60 font-bold text-sm hover:bg-white/5 transition-colors flex items-center justify-center gap-2"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        지난 리딩 기록 보기
-      </button>
     </div>
   );
 };

@@ -54,14 +54,40 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ readingType, cards, onResta
   const handleAISearch = (card: SelectedCard) => {
     const typeLabel = getSearchTypeLabel();
     const positionContext = card.position ? `${card.position}(${card.position === 'Past' ? '과거' :
-        card.position === 'Present' ? '현재' :
-          card.position === 'Future' ? '미래' : '현재'
+      card.position === 'Present' ? '현재' :
+        card.position === 'Future' ? '미래' : '현재'
       })` : "";
     const reversedContext = card.isReversed ? "역방향" : "정방향";
 
     const queryText = `타로 카드 ${card.name} ${reversedContext} ${positionContext} ${typeLabel} 상세 의미 해석`;
     const query = encodeURIComponent(queryText);
     window.open(`https://www.google.com/search?q=${query}`, '_blank');
+  };
+
+  const handleShare = async () => {
+    const shareText = `[Mystic Path Tarot] ${getTitle()} 결과\n\n` +
+      cards.map((card, i) => `${card.position ? `${card.position}: ` : ''}${card.name}${card.isReversed ? '(역)' : ''}`).join('\n') +
+      `\n\n상세한 타로 해석을 확인해보세요!`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Mystic Path Tarot Reading',
+          text: shareText,
+          url: window.location.href,
+        });
+      } catch (err) {
+        console.error('Error sharing:', err);
+      }
+    } else {
+      // Fallback: Copy to clipboard
+      try {
+        await navigator.clipboard.writeText(shareText);
+        alert('결과가 클립보드에 복사되었습니다. SNS에 붙여넣어 공유하세요!');
+      } catch (err) {
+        console.error('Failed to copy:', err);
+      }
+    }
   };
 
   return (
@@ -193,16 +219,15 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ readingType, cards, onResta
             새로운 리딩 시작하기
           </button>
 
-          <div className="flex gap-4">
-            <button className="flex-1 bg-white/5 border border-white/10 py-4 rounded-2xl font-bold text-white transition-all hover:bg-white/10 active:scale-95 flex items-center justify-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-mystic-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" /></svg>
-              저장하기
-            </button>
-            <button className="flex-1 bg-white/5 border border-white/10 py-4 rounded-2xl font-bold text-white transition-all hover:bg-white/10 active:scale-95 flex items-center justify-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-mystic-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m7.947 0c.202.404.316.86.316 1.342 0 .482-.114.938-.316 1.342m0 0a2 2 0 103.947 0m-3.947 0c.202.404.316.86.316 1.342 0 .482-.114.938-.316 1.342m-7.947 0a2 2 0 10-3.947 0m3.947 0c-.202.404-.316.86-.316 1.342 0 .482.114.938.316 1.342m7.947-2.684a2 2 0 10-3.947 0m-3.947 0a2 2 0 103.947 0m-3.947 0c.202-.404.316-.862.316-1.342 0-.482-.114-.938-.316-1.342m7.947 0c.202-.404.316-.862.316-1.342 0-.482-.114-.938-.316-1.342" /></svg>
-              공유하기
-            </button>
-          </div>
+          <button
+            onClick={handleShare}
+            className="w-full bg-white/5 border border-white/10 py-4 rounded-2xl font-bold text-white transition-all hover:bg-white/10 active:scale-95 flex items-center justify-center gap-2"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-mystic-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m7.947 0c.202.404.316.86.316 1.342 0 .482-.114.938-.316 1.342m0 0a2 2 0 103.947 0m-3.947 0c.202.404.316.86.316 1.342 0 .482-.114.938-.316 1.342m-7.947 0a2 2 0 10-3.947 0m3.947 0c-.202.404-.316.86-.316 1.342 0 .482.114.938.316 1.342m7.947-2.684a2 2 0 10-3.947 0m-3.947 0a2 2 0 103.947 0m-3.947 0c.202-.404.316-.862.316-1.342 0-.482-.114-.938-.316-1.342m7.947 0c.202-.404.316-.862.316-1.342 0-.482-.114-.938-.316-1.342" />
+            </svg>
+            친구에게 결과 공유하기
+          </button>
         </div>
       </div>
     </div>

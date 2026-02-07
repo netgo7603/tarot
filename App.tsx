@@ -1,31 +1,16 @@
 
 import React, { useState, useCallback } from 'react';
-import { ReadingType, Step, SelectedCard, ReadingRecord } from './types';
+import { ReadingType, Step, SelectedCard } from './types';
 import Header from './components/Header';
 import Home from './components/Home';
 import ShuffleScreen from './components/ShuffleScreen';
 import SelectionScreen from './components/SelectionScreen';
 import ResultScreen from './components/ResultScreen';
-import HistoryScreen from './components/HistoryScreen';
 
 const App: React.FC = () => {
   const [step, setStep] = useState<Step>('HOME');
   const [readingType, setReadingType] = useState<ReadingType>(ReadingType.DAILY);
   const [selectedCards, setSelectedCards] = useState<SelectedCard[]>([]);
-
-  const saveToHistory = useCallback((type: ReadingType, cards: SelectedCard[]) => {
-    const historyJson = localStorage.getItem('tarot_history');
-    const history: ReadingRecord[] = historyJson ? JSON.parse(historyJson) : [];
-
-    const newRecord: ReadingRecord = {
-      id: Date.now().toString(),
-      timestamp: Date.now(),
-      type,
-      cards
-    };
-
-    localStorage.setItem('tarot_history', JSON.stringify([newRecord, ...history]));
-  }, []);
 
   const startReading = useCallback((type: ReadingType) => {
     setReadingType(type);
@@ -39,12 +24,7 @@ const App: React.FC = () => {
 
   const completeSelection = useCallback((cards: SelectedCard[]) => {
     setSelectedCards(cards);
-    saveToHistory(readingType, cards);
     setStep('RESULT');
-  }, [readingType, saveToHistory]);
-
-  const viewHistory = useCallback(() => {
-    setStep('HISTORY');
   }, []);
 
   const goHome = useCallback(() => {
@@ -57,7 +37,7 @@ const App: React.FC = () => {
       <Header onBack={step !== 'HOME' ? goHome : undefined} />
 
       <main className="flex-1 flex flex-col pt-16">
-        {step === 'HOME' && <Home onStart={startReading} onViewHistory={viewHistory} />}
+        {step === 'HOME' && <Home onStart={startReading} />}
         {step === 'SHUFFLE' && (
           <ShuffleScreen
             readingType={readingType}
@@ -76,9 +56,6 @@ const App: React.FC = () => {
             cards={selectedCards}
             onRestart={goHome}
           />
-        )}
-        {step === 'HISTORY' && (
-          <HistoryScreen onBack={goHome} />
         )}
       </main>
     </div>
