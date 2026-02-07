@@ -53,13 +53,17 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ readingType, cards, onResta
 
   const handleAISearch = (card: SelectedCard) => {
     const typeLabel = getSearchTypeLabel();
-    const positionContext = card.position ? `${card.position}(${card.position === 'Past' ? '과거' :
-      card.position === 'Present' ? '현재' :
-        card.position === 'Future' ? '미래' : '현재'
-      })` : "";
-    const reversedContext = card.isReversed ? "역방향" : "정방향";
+    const positionText = card.position ?
+      (card.position === 'Past' ? '과거' :
+        card.position === 'Present' ? '현재' :
+          card.position === 'Future' ? '미래' : '현재')
+      : '현재';
 
-    const queryText = `타로 카드 ${card.name} ${reversedContext} ${positionContext} ${typeLabel} 상세 의미 해석`;
+    const contextStr = card.position ? `${positionText} 위치` : '결과';
+    const reversedStr = card.isReversed ? '역방향(Reversed)' : '정방향(Upright)';
+
+    // Construct a natural language query for better AI/Search results
+    const queryText = `타로 ${typeLabel} 리딩에서 ${contextStr}에 나온 "${card.name}" ${reversedStr} 카드의 상세한 의미와 조언 해석`;
     const query = encodeURIComponent(queryText);
     window.open(`https://www.google.com/search?q=${query}`, '_blank');
   };
